@@ -30,4 +30,7 @@ dependencies {
     def retrofit_Version = "2.5.0"
     implementation "com.squareup.retrofit2:retrofit:$retrofit_Version" // retrofit
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_Version" // converter to convert json to java object
+
+    def lifecycle_version = "2.1.0"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version" // liveData and viewModel
 }
