@@ -35,4 +35,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version" // liveData and viewModel
 
     implementation "androidx.cardview:cardview:1.0.0"
+
+    def recyclerView_version = "1.1.0"
+    implementation "androidx.recyclerview:recyclerview:$recyclerView_version"
 }
