@@ -33,4 +33,6 @@ dependencies {
 
     def lifecycle_version = "2.1.0"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version" // liveData and viewModel
+
+    implementation "androidx.cardview:cardview:1.0.0"
 }
