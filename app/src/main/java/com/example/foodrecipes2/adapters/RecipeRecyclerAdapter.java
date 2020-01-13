@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.foodrecipes2.R;
 import com.example.foodrecipes2.models.Recipe;
 
@@ -31,6 +33,13 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 	@Override
 	public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+		RequestOptions requestOptions = new RequestOptions()
+				.placeholder(R.drawable.ic_launcher_background);
+		Glide.with(holder.itemView.getContext())
+				.setDefaultRequestOptions(requestOptions)
+				.load(mRecipes.get(position))
+				.into(((RecipeViewHolder)holder).image);
+
 		((RecipeViewHolder)holder).title.setText(mRecipes.get(position).getTitle());
 		((RecipeViewHolder)holder).publisher.setText(mRecipes.get(position).getPublisher());
 		((RecipeViewHolder)holder).socialScore.setText(String.valueOf(Math.round(mRecipes.get(position).getSocial_rank())));
