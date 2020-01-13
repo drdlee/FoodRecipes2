@@ -3,6 +3,7 @@ package com.example.foodrecipes2;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,7 +33,7 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 
 		subscribeObservers();
 		initRecyclerView();
-		testRetrofitRequest();
+		initSearchBar();
 	}
 
 	private void subscribeObservers() {
@@ -53,15 +54,22 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 		mAdapter = new RecipeRecyclerAdapter(this);
 		mRecyclerView.setAdapter(mAdapter);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
 	}
 
-	private void searchRecipeApi(String query, int pageNumber) {
-		mRecipeListViewModel.searchRecipeApi(query, pageNumber);
-	}
+	private void initSearchBar() {
+		final androidx.appcompat.widget.SearchView searchView = findViewById(R.id.search_view);
+		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+				mRecipeListViewModel.searchRecipeApi(query,1);
+				return false;
+			}
 
-	private void testRetrofitRequest() {
-		searchRecipeApi("chicken breast", 1);
+			@Override
+			public boolean onQueryTextChange(String newText) {
+				return false;
+			}
+		});
 	}
 
 	@Override
