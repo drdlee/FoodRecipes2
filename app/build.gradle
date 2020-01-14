@@ -45,4 +45,7 @@ dependencies {
 
     def materialDesign_version = "1.0.0"
     implementation "com.google.android.material:material:$materialDesign_version"
+
+    def circleImageView = "3.0.1"
+    implementation "de.hdodenhof:circleimageview:$circleImageView"
 }

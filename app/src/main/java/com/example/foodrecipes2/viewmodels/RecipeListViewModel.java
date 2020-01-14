@@ -11,9 +11,11 @@ import java.util.List;
 public class RecipeListViewModel  extends ViewModel {
 
 	private RecipeRepository mRecipeRepository;
+	private boolean mIsViewingRecipes;
 
 	public RecipeListViewModel() {
 		mRecipeRepository = RecipeRepository.getInstance();
+		mIsViewingRecipes = false;
 	}
 
 	public LiveData<List<Recipe>> getRecipes() {
@@ -21,6 +23,15 @@ public class RecipeListViewModel  extends ViewModel {
 	}
 
 	public void searchRecipeApi(String query, int pageNumber) {
+		setIsViewingRecipes(true);
 		mRecipeRepository.searchRecipeApi(query,pageNumber);
+	}
+
+	public boolean isIsViewingRecipes() {
+		return mIsViewingRecipes;
+	}
+
+	public void setIsViewingRecipes(boolean mIsViewingRecipes) {
+		this.mIsViewingRecipes = mIsViewingRecipes;
 	}
 }
