@@ -1,7 +1,6 @@
 package com.example.foodrecipes2;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.Observer;
@@ -19,10 +18,10 @@ import java.util.List;
 
 public class RecipeListActivity extends BaseActivity implements OnRecipeListener {
 
-	private static final String TAG = "RecipeListActivity";
 	private RecipeListViewModel mRecipeListViewModel;
 	private RecyclerView mRecyclerView;
 	private RecipeRecyclerAdapter mAdapter;
+	private SearchView mSearchView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +30,7 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 
 		mRecipeListViewModel = ViewModelProviders.of(this).get(RecipeListViewModel.class);
 		mRecyclerView = findViewById(R.id.recipe_list);
+		mSearchView = findViewById(R.id.search_view);
 
 		subscribeObservers();
 		initRecyclerView();
@@ -49,6 +49,7 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 				if (recipes != null) {
 					if (mRecipeListViewModel.isIsViewingRecipes()) {
 						mAdapter.setRecipes(recipes);
+						mRecipeListViewModel.setIsPerformingQuery(false);
 					}
 				}
 			}
@@ -64,12 +65,12 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 	}
 
 	private void initSearchBar() {
-		final androidx.appcompat.widget.SearchView searchView = findViewById(R.id.search_view);
-		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+		mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				mRecipeListViewModel.searchRecipeApi(query,1);
 				mAdapter.displayLoading();
+				mSearchView.clearFocus();
 				return false;
 			}
 
@@ -89,6 +90,7 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 	public void onCategoryClick(String category) {
 		mRecipeListViewModel.searchRecipeApi(category,1);
 		mAdapter.displayLoading();
+		mSearchView.clearFocus();
 	}
 
 	private void displaySearchCategories() {
