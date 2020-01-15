@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.foodrecipes2.adapters.OnRecipeListener;
 import com.example.foodrecipes2.adapters.RecipeRecyclerAdapter;
 import com.example.foodrecipes2.models.Recipe;
+import com.example.foodrecipes2.util.VerticalSpacingItemDecorator;
 import com.example.foodrecipes2.viewmodels.RecipeListViewModel;
 
 import java.util.List;
@@ -59,6 +60,8 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 		mAdapter = new RecipeRecyclerAdapter(this);
 		mRecyclerView.setAdapter(mAdapter);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+		VerticalSpacingItemDecorator itemDecorator = new VerticalSpacingItemDecorator(5);
+		mRecyclerView.addItemDecoration(itemDecorator);
 	}
 
 	private void initSearchBar() {
