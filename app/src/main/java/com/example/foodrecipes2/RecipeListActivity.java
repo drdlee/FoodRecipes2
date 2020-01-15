@@ -47,8 +47,7 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 			@Override
 			public void onChanged(List<Recipe> recipes) {
 				if (recipes != null) {
-					for (Recipe recipe : recipes) {
-						Log.d(TAG, "onChanged: " + recipe.getTitle());
+					if (mRecipeListViewModel.isIsViewingRecipes()) {
 						mAdapter.setRecipes(recipes);
 					}
 				}
@@ -95,5 +94,15 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 	private void displaySearchCategories() {
 		mRecipeListViewModel.setIsViewingRecipes(false);
 		mAdapter.displaySearchCategories();
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (mRecipeListViewModel.onBackPressed()) {
+			super.onBackPressed();
+		}
+		else {
+			displaySearchCategories();
+		}
 	}
 }
