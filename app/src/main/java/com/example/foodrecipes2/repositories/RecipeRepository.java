@@ -29,17 +29,25 @@ public class RecipeRepository {
 		return mRecipeApiClient.getRecipes();
 	}
 
+	public LiveData<Recipe> getRecipe() {
+		return mRecipeApiClient.getRecipe();
+	}
+
 	public void searchRecipeApi(String query, int pageNumber) {
 		if (pageNumber == 0) {
 			pageNumber = 1;
 		}
 		mQuery = query;
 		mPageNumber = pageNumber;
-		mRecipeApiClient.searchRecipeApi(query,pageNumber);
+		mRecipeApiClient.searchRecipeApi(query, pageNumber);
 	}
 
 	public void searchNextPage() {
-		searchRecipeApi(mQuery, mPageNumber +1);
+		searchRecipeApi(mQuery, mPageNumber + 1);
+	}
+
+	public void searchRecipeById(String recipeId) {
+		mRecipeApiClient.searchRecipeById(recipeId);
 	}
 
 	public void cancelRequest() {
