@@ -35,6 +35,8 @@ public class RecipeActivity extends BaseActivity {
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_recipe);
+		Log.d("RecipeActivity", "onCreate: RecipeActivity Created");
+
 		mRecipeImage = findViewById(R.id.recipe_image);
 		mRecipeTitle = findViewById(R.id.recipe_title);
 		mRecipeRank = findViewById(R.id.recipe_social_score);
@@ -43,6 +45,7 @@ public class RecipeActivity extends BaseActivity {
 
 		mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
 
+		showProgressBar(true);
 		subscribeObservers();
 		getIncomingIntent();
 	}
@@ -61,11 +64,44 @@ public class RecipeActivity extends BaseActivity {
 			public void onChanged(Recipe recipe) {
 				if (recipe != null) {
 					Log.d("RecipeActivity", "onChanged: " + recipe.getTitle());
-					for (String ing: recipe.getIngredients()){
-						Log.d("RecipeActivity", "onChanged: " + ing);
+					if (recipe.getRecipe_id().equals(mRecipeViewModel.getmRecipeId())){
+						// check if the recipeId we set on mRecipeViewModel.searchRecipeById the same as current received
+						// if its the same then run below
+						setRecipeProperties(recipe);
 					}
 				}
 			}
 		});
+	}
+
+	private void setRecipeProperties(Recipe recipe) {
+		if (recipe != null) {
+			RequestOptions requestOptions = new RequestOptions()
+					.placeholder(R.drawable.ic_launcher_background);
+			Glide.with(this)
+					.setDefaultRequestOptions(requestOptions)
+					.load(recipe.getImage_url())
+					.into(mRecipeImage);
+
+			mRecipeTitle.setText(recipe.getTitle());
+			mRecipeRank.setText(String.valueOf(Math.round(recipe.getSocial_rank())));
+
+			mRecipeIngredientsContainer.removeAllViews();
+			for (String ingredient: recipe.getIngredients()){
+				TextView textView = new TextView(this);
+				textView.setText(ingredient);
+				textView.setTextSize(15);
+				textView.setLayoutParams(new LinearLayout.LayoutParams(
+						ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+				));
+				mRecipeIngredientsContainer.addView(textView);
+			}
+			showProgressBar(false);
+			showParent();
+		}
+	}
+
+	private void showParent() {
+		mRScrollView.setVisibility(View.VISIBLE);
 	}
 }
