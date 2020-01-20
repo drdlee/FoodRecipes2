@@ -50,8 +50,8 @@ public class RecipeActivity extends BaseActivity {
 		getIncomingIntent();
 	}
 
-	private void getIncomingIntent(){
-		if (getIntent().hasExtra("recipe")){
+	private void getIncomingIntent() {
+		if (getIntent().hasExtra("recipe")) {
 			Recipe recipe = getIntent().getParcelableExtra("recipe");
 			Log.d(TAG, "getIncomingIntent: " + recipe.getRecipe_id());
 			mRecipeViewModel.searchRecipeById(recipe.getRecipe_id());
@@ -64,11 +64,22 @@ public class RecipeActivity extends BaseActivity {
 			public void onChanged(Recipe recipe) {
 				if (recipe != null) {
 					Log.d("RecipeActivity", "onChanged: " + recipe.getTitle());
-					if (recipe.getRecipe_id().equals(mRecipeViewModel.getmRecipeId())){
+					if (recipe.getRecipe_id().equals(mRecipeViewModel.getmRecipeId())) {
 						// check if the recipeId we set on mRecipeViewModel.searchRecipeById the same as current received
 						// if its the same then run below
 						setRecipeProperties(recipe);
+						mRecipeViewModel.setmDidRetrieveRecipe(true);
 					}
+				}
+			}
+		});
+
+		mRecipeViewModel.isRecipeRequestTimeout().observe(this, new Observer<Boolean>() {
+			@Override
+			public void onChanged(Boolean aBoolean) {
+				if (aBoolean && !mRecipeViewModel.getmDidRetrieveRecipe()) {
+					Log.d("RecipeActivity", "onChanged: recipe requets timeout");
+					displayErrorScreen("Error retrieving data. Check network connection");
 				}
 			}
 		});
@@ -87,7 +98,7 @@ public class RecipeActivity extends BaseActivity {
 			mRecipeRank.setText(String.valueOf(Math.round(recipe.getSocial_rank())));
 
 			mRecipeIngredientsContainer.removeAllViews();
-			for (String ingredient: recipe.getIngredients()){
+			for (String ingredient : recipe.getIngredients()) {
 				TextView textView = new TextView(this);
 				textView.setText(ingredient);
 				textView.setTextSize(15);
@@ -103,5 +114,30 @@ public class RecipeActivity extends BaseActivity {
 
 	private void showParent() {
 		mRScrollView.setVisibility(View.VISIBLE);
+	}
+
+	private void displayErrorScreen(String errorMessage) {
+		mRecipeTitle.setText("Error retrieving recipe");
+		mRecipeRank.setText("");
+		TextView textView = new TextView(this);
+		if (!errorMessage.equals("")) {
+			textView.setText(errorMessage);
+		} else {
+			textView.setText("Error");
+		}
+		textView.setTextSize(15);
+		textView.setLayoutParams(new LinearLayout.LayoutParams(
+				ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+		));
+		mRecipeIngredientsContainer.addView(textView);
+		RequestOptions requestOptions = new RequestOptions()
+				.placeholder(R.drawable.ic_launcher_background);
+		Glide.with(this)
+				.setDefaultRequestOptions(requestOptions)
+				.load(R.drawable.ic_launcher_background)
+				.into(mRecipeImage);
+
+		showProgressBar(false);
+		showParent();
 	}
 }
